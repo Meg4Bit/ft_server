@@ -32,6 +32,8 @@ COPY ./srcs/config.inc.php phpMyAdmin
 
 RUN tar xzvf ./wordpress.tar.gz && rm -rf wordpress.tar.gz
 
+ENV DOCKER_HOST_IP="localhost"
+
 COPY ./srcs/start.sh /var/
 COPY ./srcs/mysql_setup.sql /var/
 COPY ./srcs/wordpress.sql /var/
@@ -40,7 +42,6 @@ COPY ./srcs/nginx.conf /etc/nginx/sites-available/default
 
 RUN service mysql start && mysql < /var/mysql_setup.sql && mysql wordpress < /var/wordpress.sql
 RUN openssl req -x509 -batch -new -newkey rsa:2048 -nodes -keyout /etc/ssl/certs/localhost.key -subj '/C=RU/ST=Moscow/L=Moscow/O=21 school/CN=localhost.com' -out /etc/ssl/certs/localhost.csr
-#RUN openssl req -x509 -nodes -days 365 -newkey rsa:2048 -subj '/C=RU/ST=RU/L=Moscow/O=School21/CN=tcarlena' -keyout /etc/ssl/certs/localhost.key -out /etc/ssl/certs/localhost.crt
 RUN chown -R www-data:www-data *
 RUN chmod 755 -R *
 
